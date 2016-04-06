@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+    which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+    There has to be one entity for each item to be referenced. 
+    An alternate method (rfc include) is described in the references. -->
+
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
+<!ENTITY RFC5226 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml">
+<!ENTITY RFC5952 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5952.xml">
+<!ENTITY RFC6020 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020.xml">
+<!ENTITY RFC6241 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml">
+<!ENTITY RFC6991 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6991.xml">
+
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+
+<rfc category="std" docName="draft-kowalewski-netmod-supplemental-common-yang-data-types-00" ipr="trust200902">
+ <!-- category values: std, bcp, info, exp, and historic
+    ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
+       or pre5378Trust200902
+    you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+    they will automatically be output with "(if approved)" -->
+
+ <!-- ***** FRONT MATTER ***** -->
+
+ <front>
+   <!-- The abbreviated title is used in the page header - it is only necessary if the 
+        full title is longer than 39 characters -->
+
+   <title abbrev="IP Address with Prefix YANG">IP Address with Prefix Length YANG Data Types</title>
+
+   <!-- add 'role="editor"' below for the editors if appropriate -->
+
+   <!-- Another author who claims to be an editor -->
+
+   <author fullname="Normen B. Kowalewski" initials="N.B.K."
+           surname="Kowalewski">
+     <organization>Deutsche Telekom AG</organization>
+
+     <address>
+       <postal>
+         <street>Landgrabenweg 151</street>
+
+         <!-- Reorder these if your country does things differently -->
+
+         <code>53227</code>
+
+         <city>Bonn</city>
+
+         <region></region>
+
+         <country>Germany</country>
+       </postal>
+
+       <email>normen.kowalewski@telekom.de</email>
+
+     </address>
+   </author>
+
+   <date year="2016" />
+
+   <area>Operations Area</area>
+
+   <workgroup>NETMOD</workgroup>
+
+   <keyword>YANG, PREFIX, IPV4, IPV6</keyword>
+
+   <abstract>
+     <t>This memo defines three additional Internet-Specific Derived Types: 
+	 IP-address-with-prefix, and its incarnations IPv4-address-with-prefix and 
+	 IPv6-address-with-prefix as data types for use in YANG Data Models.</t>
+   </abstract>
+ </front>
+
+ <middle>
+   <section title="Introduction">
+     <t>The current specification of Common YANG Data Types is in <xref
+     target="RFC6991">RFC&nbsp;6991</xref>. This document specfies three
+     additional Internet-Specific Derived Types: IP-address-with-prefix,  
+	 IPv4-address-with-prefix and Iv6-address-with-prefix.</t>
+
+     <section title="Requirements Language">
+       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+       document are to be interpreted as described in <xref
+       target="RFC2119">RFC 2119</xref>.</t>
+     </section>
+   </section>
+
+
+   <section title="Supplemental Core YANG Derived Types">
+
+   <t>This section specfies three additional Internet-Specific Derived Types
+     IP-address-with-prefix, and its current IP protocol version specific
+     incarnations, IPv4-address-with-prefix and Iv6-address-with-prefix.</t>
+
+   <figure>
+   <artwork><![CDATA[
+<CODE BEGINS>
+   
+   typedef ip-address-with-prefix {
+       type union {
+         type inet:ipv4-address-with-prefix;
+         type inet:ipv6-address-with-prefix;
+       }
+       description
+        "The ip-address-with-prefix type represents an IP address, 
+         including the IP prefix length and is IP version 
+         neutral.  The format of the textual representation 
+         implies the IP version.";
+
+     }
+
+   typedef ipv4-address-with-prefix {
+       type string {
+         pattern '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+               + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+               + '/(([0-9])|([1-2][0-9])|(3[0-2]))';
+       }
+       description
+        "The ipv4-address-with-prefix type represents an IPv4 address 
+         including the prefix length. The prefix length is given 
+         by the number following the slash character and must be 
+         less than or equal to 32.
+
+         A prefix length value of n corresponds to an IP address
+         mask that has n contiguous 1-bits from the most
+         significant bit (MSB) and all other bits set to 0.
+
+         In opposite to the canonical format of an IPv4 prefix, there
+         is no constraint to have all bits of the IPv4 address set to 
+         zero that are not part of the IPv4 prefix.";
+     }
+
+   typedef ipv6-address-with-prefix {
+       type string {
+         pattern '((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+               + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+               + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+               + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))'
+               + '(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))';
+         pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+               + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+               + '(/.+)';
+       }
+
+
+       description
+        "The ipv6-address-with-prefix type represents an IPv6 address 
+         including the prefix length. The prefix length is given 
+         by the number following the slash character and must be 
+         less than or equal to 128.
+
+         A prefix length value of n corresponds to an IP address
+         mask that has n contiguous 1-bits from the most
+         significant bit (MSB) and all other bits set to 0.
+
+         The IPv6 address should have all bits that do not belong
+         to the prefix set to zero.
+
+         In opposite to the canonical format of an IPv4 prefix, there is
+         no constraint to have all bits of the IPv4 address set to zero.
+
+         Furthermore, the IPv6 address is represented as defined in
+         Section 4 of RFC 5952.";
+       reference
+        "RFC 5952: A Recommendation for IPv6 Address Text
+                   Representation";
+     
+	 
+<CODE ENDS>
+        ]]></artwork>
+      </figure>   </section>
+
+   <section anchor="Acknowledgements" title="Acknowledgements">
+     <t>The writing of this document was triggered by the fact that several 
+	 vendors have declared similar data types in their own software, and that 
+	 such actions suggest these such data types SHOULD be unambiguously defined 
+	 for all implementations moving forward as part of an updated future version 
+	 of the Common YANG data types document.</t>
+
+   </section>
+
+   <section anchor="IANA" title="IANA Considerations">
+     <t>This memo does not include a request to IANA.</t>
+   </section>
+
+   <section anchor="Security" title="Security Considerations">
+     <t>There are no new security considerations.
+     Generic considerations as per <xref target="RFC3552">RFC 3552</xref> apply.</t>
+   </section>
+ </middle>
+
+ <back>
+
+   <references title="Normative References">
+     <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+     &RFC2119;
+
+   </references>
+
+   <references title="Informative References">
+     <!-- Here we use entities that we defined at the beginning. -->
+
+     &RFC3552;
+
+     &RFC5226;
+
+     &RFC5952;
+
+     &RFC6020;
+
+     &RFC6241;
+
+     &RFC6991;
+
+
+   </references>
+
+   <!-- Change Log
+
+v00 2016-04-05 NBK   Initial version 
+    2016-04-05 IF    Cleanup of text and template 
+	2016-04-06 NBK   Cleanup in code section; expansion of Informative References-->
+
+</back>
+</rfc>
