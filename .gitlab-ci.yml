@@ -1,7 +1,7 @@
 stages: [ build ]
 
 format-xml:
-  image: repo.dev.terastrm.net:5000/ts-ubuntu-xml2rfc
+  image: repo.dev.terastrm.net:5000/ts-ubuntu-xml2rfc:latest
   stage: build
   artifacts:
     paths:
