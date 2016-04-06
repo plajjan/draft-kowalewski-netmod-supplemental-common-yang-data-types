@@ -3,6 +3,10 @@ stages: [ build ]
 format-xml:
   image: ubuntu:15.10
   stage: build
+  artifacts:
+    paths:
+      - draft-kowalewski-netmod-supplemental-common-yang-data-types-00.html
+      - draft-kowalewski-netmod-supplemental-common-yang-data-types-00.txt
   script:
     - echo "deb http://se.archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list
     - export http_proxy=http://proxy.int.dev.terastrm.net:8888/
